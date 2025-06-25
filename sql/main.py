@@ -1,8 +1,10 @@
 import sqlite3
 from datetime import date
 
+
 def connect():
     return sqlite3.connect('store.db')
+
 
 def view_customers():
     with connect() as conn:
@@ -10,11 +12,13 @@ def view_customers():
         for row in rows:
             print(row)
 
+
 def view_products():
     with connect() as conn:
         rows = conn.execute("SELECT * FROM Products").fetchall()
         for row in rows:
             print(row)
+
 
 def add_product():
     name = input("Product name: ")
@@ -28,6 +32,7 @@ def add_product():
         )
         print("Product added successfully.")
 
+
 def place_order():
     customer_id = int(input("Customer ID: "))
     product_id = int(input("Product ID: "))
@@ -38,15 +43,21 @@ def place_order():
         cursor = conn.cursor()
         
         # Insert into Orders table
-        cursor.execute("INSERT INTO Orders (customer_id, order_date) VALUES (?, ?)",
-                       (customer_id, today))
+        cursor.execute(
+            "INSERT INTO Orders (customer_id, order_date) VALUES (?, ?)",
+            (customer_id, today)
+        )
         order_id = cursor.lastrowid
 
         # Insert into OrderItems
-        cursor.execute("INSERT INTO OrderItems (order_id, product_id, quantity) VALUES (?, ?, ?)",
-                       (order_id, product_id, quantity))
+        cursor.execute(
+            "INSERT INTO OrderItems (order_id, product_id, quantity) "
+            "VALUES (?, ?, ?)",
+            (order_id, product_id, quantity)
+        )
 
         print(f"Order #{order_id} placed successfully.")
+
 
 def view_orders():
     with connect() as conn:
@@ -60,6 +71,7 @@ def view_orders():
         """).fetchall()
         for row in rows:
             print(row)
+
 
 def menu():
     while True:
@@ -87,6 +99,7 @@ def menu():
             break
         else:
             print("Invalid choice. Try again.")
+
 
 if __name__ == "__main__":
     menu()
